@@ -8,8 +8,8 @@ Installation
 Virtual environment
 -------------------
 
-Before you install any packages it is recommended that you create a virtual environment. You can do this using the built in `venv`_Github module.
-It is also possible to use the `virtualenv`_ package which can be installed with `pip`_.
+Before you install any packages it is recommended that you create a virtual environment. You can do this using the built in :code:`venv` module.
+It is also possible to use the :code:`virtualenv` package which can be installed with :code:`pip`.
 
 .. code-block:: console
 

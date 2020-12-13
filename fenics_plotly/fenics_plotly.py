@@ -7,6 +7,19 @@ import plotly.graph_objects as go
 
 
 def savefig(fig, filename, save_config=None):
+    """Save figure to file
+
+    Parameters
+    ----------
+    fig : `plotly.graph_objects.Figure`
+        This figure that you want to save
+    filename : Path or str
+        Path to the desitnation where you want to
+        save the figure
+    save_config : dict, optional
+        Additionsal cofigurations to be assed
+        to `plotly.offline.plot`, by default None
+    """
 
     filename = Path(filename)
     outdir = filename.parent
@@ -26,7 +39,7 @@ def savefig(fig, filename, save_config=None):
     plotly.offline.plot(fig, filename=path.as_posix(), auto_open=False, config=config)
 
 
-def get_vertex_values(function):
+def _get_vertex_values(function):
 
     space = function.function_space()
     mesh = space.mesh()
@@ -53,7 +66,7 @@ def get_vertex_values(function):
         return res
 
 
-def get_triangles(mesh):
+def _get_triangles(mesh):
     num_faces = mesh.num_faces()
     if num_faces == 0:
         num_faces = len(list(fe.faces(mesh)))
@@ -68,7 +81,7 @@ def _cone_plot(function, size=10, showscale=True, normalize=False, **kwargs):
 
     mesh = function.function_space().mesh()
     points = mesh.coordinates()
-    vectors = get_vertex_values(function)
+    vectors = _get_vertex_values(function)
 
     if len(points[0, :]) == 2:
         points = np.c_[points, np.zeros(len(points[:, 0]))]
@@ -129,7 +142,7 @@ def _surface_plot_function(
     mesh = function.function_space().mesh()
     if intensitymode == "vertex":
         val = function.compute_vertex_values()
-        triangle = get_triangles(mesh)
+        triangle = _get_triangles(mesh)
     else:
         # Spooky!
         val = function.vector().get_local()
@@ -190,7 +203,7 @@ def _scatter_plot_function(function, colorscale, showscale=True, size=10, **kwar
 
 def _surface_plot_mesh(mesh, color, opacity=1.0, **kwargs):
     coord = mesh.coordinates()
-    triangle = get_triangles(mesh)
+    triangle = _get_triangles(mesh)
     if len(coord[0, :]) == 2:
         coord = np.c_[coord, np.zeros(len(coord[:, 0]))]
 
@@ -259,7 +272,7 @@ def _surface_plot_meshfunc(meshfunc, colorscale, **kwargs):
     if len(coord[0, :]) == 2:
         coord = np.c_[coord, np.zeros(len(coord[:, 0]))]
 
-    triangle = get_triangles(mesh)
+    triangle = _get_triangles(mesh)
     hoverinfo = ["val:" + "%d" % item for item in array]
 
     surface = go.Mesh3d(
@@ -409,6 +422,50 @@ def plot(
     show=True,
     filename=None,
 ):
+    """Plot FEnICS object
+
+    Parameters
+    ----------
+    obj : Mesh, Function. FunctionoSpace, MeshFunction, DirichleyBC
+        FEnicS object to be plotted
+    colorscale : str, optional
+        The colorscale, by default "inferno"
+    wireframe : bool, optional
+        Whether you want to show the mesh in wirteframe, by default True
+    scatter : bool, optional
+        Plot function as scatter plot, by default False
+    size : int, optional
+        Size of scatter points, by default 10
+    norm : bool, optional
+        For vectors plot the norm as a surface, by default False
+    name : str, optional
+        Name to show up in legend, by default "f"
+    color : str, optional
+        Color to be plotted on the mesh, by default "gray"
+    opacity : float, optional
+        opacity of surface, by default 1.0
+    show_grid : bool, optional
+        Show x, y (and z) axis grid, by default False
+    size_frame : [type], optional
+        Size of plot, by default None
+    background : tuple, optional
+        Background of plot, by default (242, 242, 242)
+    normalize : bool, optional
+        For vectors, normalize then to have unit length, by default False
+    component : [type], optional
+        Plot a componenent (["Magnitude", "x", "y", "z"]) for vector, by default None
+    showscale : bool, optional
+        Show colorbar, by default True
+    show : bool, optional
+        Show figure, by default True
+    filename : [type], optional
+        Path to file where you want to save the figure, by default None
+
+    Raises
+    ------
+    TypeError
+        If object to be plotted is not recognized.
+    """
 
     if isinstance(obj, fe.Mesh):
         handle = _handle_mesh
