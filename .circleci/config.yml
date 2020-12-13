@@ -30,6 +30,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            python3 -m pip install pytest --upgrade
             python3 -m pip install -r requirements_dev.txt
             python3 -m pip install .
 
