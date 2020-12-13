@@ -23,6 +23,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).parent
+autodoc_mock_imports = ["fenics", "dolfin"]
 
 sys.path.insert(0, HERE.joinpath(".."))
 import fenics_plotly  # noqa: E402
