@@ -21,9 +21,12 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from unittest import mock
 
 HERE = Path(__file__).parent
-autodoc_mock_imports = ["fenics", "dolfin"]
+
+sys.modules["fenics"] = mock.Mock()
+sys.modules["dolfin"] = mock.Mock()
 
 sys.path.insert(0, HERE.joinpath(".."))
 import fenics_plotly  # noqa: E402
