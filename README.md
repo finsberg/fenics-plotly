@@ -20,7 +20,9 @@ A package for plotting FEniCS objects using plotly
 
 ## Features
 
--   TODO
+Plot almost all types of FEnICS objects using one interface
+
+
 
 ## Credits
 
@@ -28,3 +30,5 @@ This package was created with
 [Cookiecutter](https://github.com/audreyr/cookiecutter) and the
 [finsberg/cookiecutter-pypackage](https://github.com/finsberg/cookiecutter-pypackage)
 project template.
+
+This package is also inspired by [bvpy](https://gitlab.com/oali/bvpy)
