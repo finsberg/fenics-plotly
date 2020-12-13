@@ -8,8 +8,8 @@ Installation
 Virtual environment
 -------------------
 
-Before you install any packages it is recommended that you create a virtual environment. You can do this using the built in :code:`venv` module.
-It is also possible to use the :code:`virtualenv` package which can be installed with :code:`pip`.
+Before you install any packages it is recommended that you create a virtual environment. You can do this using the built in `venv`_ module.
+It is also possible to use the `virtualenv`_ package which can be installed with `pip`_.
 
 .. code-block:: console
 
@@ -41,7 +41,7 @@ To install FEniCS-Plotly, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install fenics_plotly
+    $ pip install fenics-plotly
 
 This is the preferred method to install FEniCS-Plotly, as it will always install the most recent stable release.
 
@@ -50,7 +50,8 @@ you through the process.
 
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
-
+.. _virtualenv: https://virtualenv.pypa.io/en/latest/
+.. _venv: https://docs.python.org/3/library/venv.html
 
 From sources
 ------------
