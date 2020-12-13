@@ -21,7 +21,8 @@ jobs:
         sudo apt-get install --no-install-recommends fenics
     - name: Install dependencies
       run: |
-        make dev
+        python3 -m pip install -r requirements_dev.txt
+        python3 -m pip install .
     - name: Lint with flake8
       run: |
         make lint
