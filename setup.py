@@ -38,6 +38,6 @@ setup(
     packages=find_packages(include=["fenics_plotly", "fenics_plotly.*"]),
     test_suite="tests",
     url="https://github.com/finsberg/fenics_plotly",
-    version="0.1.2",
+    version="0.1.0",
     zip_safe=False,
 )
