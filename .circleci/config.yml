@@ -48,13 +48,13 @@ jobs:
           name: Lint with flake8
           command: |
             make lint
-        
+
       # run type checking
       - run:
           name: Static type checking with mypy
           command: |
             make type
-  
+
       # run tests!
       - run:
           name: run tests
@@ -74,5 +74,4 @@ jobs:
       - run:
           name: codecov
           command: |
-            python3 -m pip install codecov
-            codecov --token=CODECOV_TOKEN
+            bash <(curl -s https://codecov.io/bash)
