@@ -87,3 +87,6 @@ dev: clean ## Just need to make sure that libfiles remains
 	python3 -m pip install -r requirements_dev.txt
 	python3 -m pip install -e .
 	pre-commit install
+
+bump:
+	bump2version patch
