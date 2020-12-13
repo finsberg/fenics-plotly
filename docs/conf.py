@@ -18,13 +18,43 @@
 # absolute, like shown here.
 #
 import os
+import shutil
 import sys
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath(".."))
+HERE = Path(__file__).parent
 
+sys.path.insert(0, HERE.joinpath(".."))
 import fenics_plotly  # noqa: E402
 
 # -- General configuration ---------------------------------------------
+
+
+# -------------------- Import Notebooks --------------------
+
+for file in os.listdir("."):
+    if ".ipynb" in file:
+        os.remove(file)
+
+demodir = HERE.joinpath("..").joinpath("demo")
+to_import = ["unit_cube.ipynb", "unit_square.ipynb"]
+
+for notebook in demodir.iterdir():
+    if notebook.name in to_import:
+        src = notebook
+        dst = notebook.name
+        shutil.copy2(src, dst)
+
+with open("demo.rst", "w+") as f:
+    f.write(".. _demo:\n\n")
+    f.write("Demo\n")
+    f.write("====\n\n")
+    f.write(".. toctree::\n")
+    f.write("   :titlesonly:\n")
+    f.write("   :maxdepth: 1\n\n")
+    for i in to_import:
+        f.write("   " + i.replace(".ipynb", "") + "\n")
+
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
@@ -37,10 +67,33 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
-    "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
+    "nbsphinx",
 ]
+
+# Enable plotly figure in the docs
+nbsphinx_prolog = r"""
+.. raw:: html
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js'></script>
+    <script>require=requirejs;</script>
+
+
+"""
+nbsphinx_timeout = -1
+
+
+autosummary_generate = True
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3.4", None),
+    "dolfin": ("https://fenicsproject.org/docs/dolfin/latest/python/", None),
+    "ufl": ("https://fenics.readthedocs.io/projects/ufl/en/latest/", None),
+}
+inheritance_node_attrs = dict(
+    shape="ellipse", fontsize=12, color="orange", style="filled"
+)
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -92,7 +145,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the

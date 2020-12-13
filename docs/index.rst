@@ -7,7 +7,7 @@ Welcome to FEniCS-Plotly's documentation!
 
    readme
    installation
-   usage
+   demo
    contributing
    authors
    history
