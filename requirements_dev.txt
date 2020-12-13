@@ -14,3 +14,4 @@ pre-commit
 ipython
 pandoc
 sphinx_rtd_theme
+nbsphinx
