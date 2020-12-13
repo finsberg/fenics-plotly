@@ -70,3 +70,9 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: htmlcov
+
+      - run:
+        name: codecov
+        command: |
+          python3 -m pip install codecov
+          codecov --token=CODECOV_TOKEN
