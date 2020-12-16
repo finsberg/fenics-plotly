@@ -90,8 +90,8 @@ nbsphinx_timeout = -1
 
 autosummary_generate = True
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3.4", None),
-    "dolfin": ("https://fenicsproject.org/docs/dolfin/latest/python/", None),
+    "python": ("https://docs.python.org/3", None),
+    "dolfin": ("https://fenicsproject.org/olddocs/dolfin/latest/python", None),
     "ufl": ("https://fenics.readthedocs.io/projects/ufl/en/latest/", None),
 }
 inheritance_node_attrs = dict(
