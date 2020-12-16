@@ -16,7 +16,7 @@ A package for plotting FEniCS objects using plotly
 
 * Free software: MIT license
 * Documentation: https://fenics-plotly.readthedocs.io.
-
+* Source code: https://github.com/finsberg/fenics-plotly
 
 ## Features
 
