@@ -30,6 +30,15 @@ def test_plot_mesh(dim, wireframe):
     plot(mesh, wireframe=wireframe, show=False)
 
 
+def test_plot_two_mesh():
+    mesh1 = df.UnitCubeMesh(2, 2, 2)
+    mesh2 = df.BoxMesh(
+        df.MPI.comm_world, df.Point(0.0, 0.0, 0.0), df.Point(1.2, 0.5, 1.3), 3, 3, 3
+    )
+    fig = plot(mesh1, show=False)
+    fig.add_plot(plot(mesh2, color="red", show=False))
+
+
 @pytest.mark.parametrize(
     "dim, wireframe, scatter, degree",
     it.product([2, 3], [True, False], [True, False], [1, 2]),

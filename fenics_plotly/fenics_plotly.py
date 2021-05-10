@@ -521,3 +521,19 @@ def plot(
         savefig(fig, filename)
     if show:
         fig.show()
+    return FEniCSPlotFig(fig)
+
+
+class FEniCSPlotFig:
+    def __init__(self, fig):
+        self.figure = fig
+
+    def add_plot(self, fig):
+        data = list(self.figure.data) + list(fig.figure.data)
+        self.figure = go.FigureWidget(data=data, layout=self.figure.layout)
+
+    def show(self):
+        self.figure.show()
+
+    def save(self, filename):
+        savefig(self.figure, filename)
