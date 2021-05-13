@@ -1,9 +1,20 @@
+import os
 from pathlib import Path
 
 import fenics as fe
 import numpy as np
 import plotly
 import plotly.graph_objects as go
+import plotly.io as pio
+
+try:
+    _SHOW_PLOT = bool(int(os.getenv("FENICS_PLOTLY_SHOW", 1)))
+except ValueError:
+    _SHOW_PLOT = True
+
+
+def set_renderer(renderer):
+    pio.renderers.default = renderer
 
 
 def savefig(fig, filename, save_config=None):
@@ -519,7 +530,7 @@ def plot(
 
     if filename is not None:
         savefig(fig, filename)
-    if show:
+    if show and _SHOW_PLOT:
         fig.show()
     return FEniCSPlotFig(fig)
 
@@ -533,7 +544,8 @@ class FEniCSPlotFig:
         self.figure = go.FigureWidget(data=data, layout=self.figure.layout)
 
     def show(self):
-        self.figure.show()
+        if _SHOW_PLOT:
+            self.figure.show()
 
     def save(self, filename):
         savefig(self.figure, filename)

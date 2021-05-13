@@ -4,6 +4,6 @@ __author__ = """Henrik Finsberg"""
 __email__ = "henriknf@simula.no"
 __version__ = "0.1.3"
 
-from .fenics_plotly import plot
+from .fenics_plotly import plot, set_renderer
 
-__all__ = ["plot"]
+__all__ = ["plot", "set_renderer"]
