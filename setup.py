@@ -38,7 +38,7 @@ setup(
     packages=find_packages(include=["fenics_plotly", "fenics_plotly.*"]),
     test_suite="tests",
     url="https://github.com/finsberg/fenics-plotly",
-    version="0.1.4",
+    version="0.1.5",
     project_urls={
         "Documentation": "https://fenics-plotly.readthedocs.io",
         "Source": "https://github.com/finsberg/fenics-plotly",
