@@ -2,7 +2,7 @@
 
 __author__ = """Henrik Finsberg"""
 __email__ = "henriknf@simula.no"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 from .fenics_plotly import plot, set_renderer
 
