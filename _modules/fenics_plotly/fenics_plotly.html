@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fenics_plotly.fenics_plotly &mdash; FEniCS-Plotly 0.1.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> FEniCS-Plotly
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">FEniCS-Plotly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">fenics_plotly</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">FEniCS-Plotly</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>fenics_plotly.fenics_plotly</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fenics_plotly.fenics_plotly</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">fenics</span> <span class="k">as</span> <span class="nn">fe</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">plotly</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">_SHOW_PLOT</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FENICS_PLOTLY_SHOW&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="n">_SHOW_PLOT</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="set_renderer"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.set_renderer">[docs]</a><span class="k">def</span> <span class="nf">set_renderer</span><span class="p">(</span><span class="n">renderer</span><span class="p">):</span>
+    <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">renderer</span></div>
+
+
+<div class="viewcode-block" id="savefig"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.savefig">[docs]</a><span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">save_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save figure to file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : `plotly.graph_objects.Figure`</span>
+<span class="sd">        This figure that you want to save</span>
+<span class="sd">    filename : Path or str</span>
+<span class="sd">        Path to the desitnation where you want to</span>
+<span class="sd">        save the figure</span>
+<span class="sd">    save_config : dict, optional</span>
+<span class="sd">        Additionsal cofigurations to be assed</span>
+<span class="sd">        to `plotly.offline.plot`, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">assert</span> <span class="n">outdir</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Folder </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2"> does not exist&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;toImageButtonOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="o">.</span><span class="n">stem</span><span class="p">,</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">1500</span><span class="p">,</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">save_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">save_config</span><span class="p">)</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_vertex_values</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+
+    <span class="n">space</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">ufl_shape</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">ufl_element</span><span class="p">(),</span> <span class="n">fe</span><span class="o">.</span><span class="n">FiniteElement</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">function</span><span class="o">.</span><span class="n">compute_vertex_values</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">size_n</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">ufl_element</span><span class="p">(),</span> <span class="n">fe</span><span class="o">.</span><span class="n">VectorElement</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">num_entities</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_n</span><span class="p">):</span>
+                <span class="n">res</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">deepcopy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">compute_vertex_values</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">ufl_element</span><span class="p">(),</span> <span class="n">fe</span><span class="o">.</span><span class="n">TensorElement</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mesh</span><span class="o">.</span><span class="n">num_entities</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_n</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_n</span><span class="p">):</span>
+                    <span class="n">res</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                        <span class="n">count</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">deepcopy</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">compute_vertex_values</span><span class="p">()</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="n">size_n</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+
+<span class="k">def</span> <span class="nf">_get_triangles</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+    <span class="n">num_faces</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">num_faces</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">num_faces</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">num_faces</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="n">mesh</span><span class="p">)))</span>
+    <span class="n">triangle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">num_faces</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="n">mesh</span><span class="p">)):</span>
+        <span class="n">triangle</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">entities</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">triangle</span>
+
+
+<span class="k">def</span> <span class="nf">_cone_plot</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">_get_vertex_values</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">points</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="k">if</span> <span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">vectors</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">vectors</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">cones</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Cone</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">u</span><span class="o">=</span><span class="n">vectors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">v</span><span class="o">=</span><span class="n">vectors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">w</span><span class="o">=</span><span class="n">vectors</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">sizemode</span><span class="o">=</span><span class="s2">&quot;absolute&quot;</span><span class="p">,</span>
+        <span class="n">sizeref</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">showscale</span><span class="o">=</span><span class="n">showscale</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cones</span>
+
+
+<span class="k">def</span> <span class="nf">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+    <span class="n">triangle</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cells</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">tri_points</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="n">triangle</span><span class="p">]</span>
+    <span class="n">Xe</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Ye</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Ze</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">tri_points</span><span class="p">:</span>
+        <span class="n">Xe</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">T</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
+        <span class="n">Ye</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">T</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
+        <span class="n">Ze</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">T</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="c1"># define the trace for triangle sides</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">Xe</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">Ye</span><span class="p">,</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">Ze</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;rgb(70,70,70)&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">hoverinfo</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">lines</span>
+
+
+<span class="k">def</span> <span class="nf">_surface_plot_function</span><span class="p">(</span>
+    <span class="n">function</span><span class="p">,</span> <span class="n">colorscale</span><span class="p">,</span> <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">intensitymode</span><span class="o">=</span><span class="s2">&quot;vertex&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">intensitymode</span> <span class="o">==</span> <span class="s2">&quot;vertex&quot;</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">compute_vertex_values</span><span class="p">()</span>
+        <span class="n">triangle</span> <span class="o">=</span> <span class="n">_get_triangles</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Spooky!</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">get_local</span><span class="p">()</span>
+        <span class="n">triangle</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cells</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+
+    <span class="n">hoverinfo</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;val:&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%.5f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Mesh3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">i</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">j</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">k</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">flatshading</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">intensitymode</span><span class="o">=</span><span class="n">intensitymode</span><span class="p">,</span>
+        <span class="n">intensity</span><span class="o">=</span><span class="n">val</span><span class="p">,</span>
+        <span class="n">colorscale</span><span class="o">=</span><span class="n">colorscale</span><span class="p">,</span>
+        <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">hoverinfo</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">hoverinfo</span><span class="p">,</span>
+        <span class="n">showscale</span><span class="o">=</span><span class="n">showscale</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">surface</span>
+
+
+<span class="k">def</span> <span class="nf">_scatter_plot_function</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">colorscale</span><span class="p">,</span> <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">dofs_coord</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate_dof_coordinates</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dofs_coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">dofs_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">dofs_coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span><span class="o">.</span><span class="n">get_local</span><span class="p">()</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+    <span class="n">hoverinfo</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;val:&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%.5f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">val</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">colorscale</span><span class="p">),</span>
+        <span class="n">hoverinfo</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">hoverinfo</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="k">def</span> <span class="nf">_surface_plot_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+    <span class="n">triangle</span> <span class="o">=</span> <span class="n">_get_triangles</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Mesh3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">i</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">j</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">k</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">flatshading</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">surface</span>
+
+
+<span class="k">def</span> <span class="nf">_plot_dofs</span><span class="p">(</span><span class="n">functionspace</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">dofs_coord</span> <span class="o">=</span> <span class="n">functionspace</span><span class="o">.</span><span class="n">tabulate_dof_coordinates</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dofs_coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">dofs_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">dofs_coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">dofs_coord</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="k">def</span> <span class="nf">_plot_dirichlet_bc</span><span class="p">(</span><span class="n">diri</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">diri</span><span class="o">.</span><span class="n">get_boundary_values</span><span class="p">()</span>
+    <span class="n">dofs</span> <span class="o">=</span> <span class="n">diri</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate_dof_coordinates</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dofs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">dofs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">dofs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+    <span class="n">coords_diri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dofs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+    <span class="n">vals_diri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">coords_diri</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">coords_diri</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">coords_diri</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">vals_diri</span><span class="p">,</span>
+            <span class="n">colorscale</span><span class="o">=</span><span class="n">colorscale</span><span class="p">,</span>
+            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">thickness</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="k">def</span> <span class="nf">_surface_plot_meshfunc</span><span class="p">(</span><span class="n">meshfunc</span><span class="p">,</span> <span class="n">colorscale</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">meshfunc</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">meshfunc</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">meshfunc</span><span class="o">.</span><span class="n">array</span><span class="p">()</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">coordinates</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">coord</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">triangle</span> <span class="o">=</span> <span class="n">_get_triangles</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">hoverinfo</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;val:&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">array</span><span class="p">]</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Mesh3d</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">coord</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">i</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">j</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">k</span><span class="o">=</span><span class="n">triangle</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="n">flatshading</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">intensity</span><span class="o">=</span><span class="n">array</span><span class="p">,</span>
+        <span class="n">colorscale</span><span class="o">=</span><span class="n">colorscale</span><span class="p">,</span>
+        <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">hoverinfo</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">hoverinfo</span><span class="p">,</span>
+        <span class="n">intensitymode</span><span class="o">=</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">surface</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_mesh</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wireframe</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireframe&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wireframe</span><span class="p">:</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">_surface_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_function</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">scatter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">component</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">ufl_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">scatter</span><span class="p">:</span>
+            <span class="n">surface</span> <span class="o">=</span> <span class="n">_scatter_plot_function</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">surface</span> <span class="o">=</span> <span class="n">_surface_plot_function</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">ufl_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="ow">or</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">&quot;magnitude&quot;</span><span class="p">:</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">collapse</span><span class="p">()</span>
+            <span class="n">magnitude</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="p">)),</span> <span class="n">V</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">magnitude</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">component</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+                <span class="n">surface</span> <span class="o">=</span> <span class="n">_surface_plot_function</span><span class="p">(</span><span class="n">magnitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+            <span class="n">cones</span> <span class="o">=</span> <span class="n">_cone_plot</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cones</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">&quot;magnitude&quot;</span><span class="p">:</span>
+                <span class="n">surface</span> <span class="o">=</span> <span class="n">_surface_plot_function</span><span class="p">(</span><span class="n">magnitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]):</span>
+
+                    <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">comp</span><span class="p">,</span> <span class="n">comp</span><span class="o">.</span><span class="n">upper</span><span class="p">()]:</span>
+                        <span class="k">continue</span>
+                    <span class="n">surface</span> <span class="o">=</span> <span class="n">_surface_plot_function</span><span class="p">(</span>
+                        <span class="n">obj</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">deepcopy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span>
+                    <span class="p">)</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireframe&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">mesh</span><span class="p">())</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_meshfunction</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># This is a cell function of dimension 3</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">FunctionSpace</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">mesh</span><span class="p">(),</span> <span class="s2">&quot;DG&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">vector</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">array</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">surf</span> <span class="o">=</span> <span class="n">_scatter_plot_function</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">surf</span> <span class="o">=</span> <span class="n">_surface_plot_function</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">intensitymode</span><span class="o">=</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">_surface_plot_meshfunc</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireframe&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">mesh</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_function_space</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">_plot_dofs</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireframe&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">mesh</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_dirichlet_bc</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">_plot_dirichlet_bc</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireframe&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">_wireframe_plot_mesh</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">function_space</span><span class="p">()</span><span class="o">.</span><span class="n">mesh</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span>
+    <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">,</span>
+    <span class="n">wireframe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">scatter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;f&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">show_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">size_frame</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="p">(</span><span class="mi">242</span><span class="p">,</span> <span class="mi">242</span><span class="p">,</span> <span class="mi">242</span><span class="p">),</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot FEnICS object</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : Mesh, Function. FunctionoSpace, MeshFunction, DirichleyBC</span>
+<span class="sd">        FEnicS object to be plotted</span>
+<span class="sd">    colorscale : str, optional</span>
+<span class="sd">        The colorscale, by default &quot;inferno&quot;</span>
+<span class="sd">    wireframe : bool, optional</span>
+<span class="sd">        Whether you want to show the mesh in wirteframe, by default True</span>
+<span class="sd">    scatter : bool, optional</span>
+<span class="sd">        Plot function as scatter plot, by default False</span>
+<span class="sd">    size : int, optional</span>
+<span class="sd">        Size of scatter points, by default 10</span>
+<span class="sd">    norm : bool, optional</span>
+<span class="sd">        For vectors plot the norm as a surface, by default False</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Name to show up in legend, by default &quot;f&quot;</span>
+<span class="sd">    color : str, optional</span>
+<span class="sd">        Color to be plotted on the mesh, by default &quot;gray&quot;</span>
+<span class="sd">    opacity : float, optional</span>
+<span class="sd">        opacity of surface, by default 1.0</span>
+<span class="sd">    show_grid : bool, optional</span>
+<span class="sd">        Show x, y (and z) axis grid, by default False</span>
+<span class="sd">    size_frame : [type], optional</span>
+<span class="sd">        Size of plot, by default None</span>
+<span class="sd">    background : tuple, optional</span>
+<span class="sd">        Background of plot, by default (242, 242, 242)</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        For vectors, normalize then to have unit length, by default False</span>
+<span class="sd">    component : [type], optional</span>
+<span class="sd">        Plot a componenent ([&quot;Magnitude&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;]) for vector, by default None</span>
+<span class="sd">    showscale : bool, optional</span>
+<span class="sd">        Show colorbar, by default True</span>
+<span class="sd">    show : bool, optional</span>
+<span class="sd">        Show figure, by default True</span>
+<span class="sd">    filename : [type], optional</span>
+<span class="sd">        Path to file where you want to save the figure, by default None</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If object to be plotted is not recognized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fe</span><span class="o">.</span><span class="n">Mesh</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">_handle_mesh</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fe</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">_handle_function</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fe</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">MeshFunctionSizet</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">_handle_meshfunction</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fe</span><span class="o">.</span><span class="n">FunctionSpace</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">_handle_function_space</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fe</span><span class="o">.</span><span class="n">DirichletBC</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">_handle_dirichlet_bc</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot plot object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">handle</span><span class="p">(</span>
+        <span class="n">obj</span><span class="p">,</span>
+        <span class="n">scatter</span><span class="o">=</span><span class="n">scatter</span><span class="p">,</span>
+        <span class="n">colorscale</span><span class="o">=</span><span class="n">colorscale</span><span class="p">,</span>
+        <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">size_frame</span><span class="o">=</span><span class="n">size_frame</span><span class="p">,</span>
+        <span class="n">component</span><span class="o">=</span><span class="n">component</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">show_grid</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">wireframe</span><span class="o">=</span><span class="n">wireframe</span><span class="p">,</span>
+        <span class="n">showscale</span><span class="o">=</span><span class="n">showscale</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">layout</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+        <span class="n">scene_xaxis_visible</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
+        <span class="n">scene_yaxis_visible</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
+        <span class="n">scene_zaxis_visible</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
+        <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s2">&quot;rgb&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">background</span><span class="p">),</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+        <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">aspectmode</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">size_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">size_frame</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">size_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">hovermode</span><span class="o">=</span><span class="s2">&quot;closest&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span> <span class="ow">and</span> <span class="n">_SHOW_PLOT</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">FEniCSPlotFig</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FEniCSPlotFig"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.FEniCSPlotFig">[docs]</a><span class="k">class</span> <span class="nc">FEniCSPlotFig</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">fig</span>
+
+<div class="viewcode-block" id="FEniCSPlotFig.add_plot"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.FEniCSPlotFig.add_plot">[docs]</a>    <span class="k">def</span> <span class="nf">add_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FEniCSPlotFig.show"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.FEniCSPlotFig.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_SHOW_PLOT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FEniCSPlotFig.save"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.FEniCSPlotFig.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Henrik Finsberg
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
