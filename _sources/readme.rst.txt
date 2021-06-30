@@ -7,12 +7,12 @@ FEniCS-Plotly
 
 |image|
 
-|Documentation Status|
+|github pages|
 
 A package for plotting FEniCS objects using plotly
 
 -  Free software: MIT license
--  Documentation: https://fenics-plotly.readthedocs.io.
+-  Documentation: https://finsberg.github.io/fenics-plotly
 -  Source code: https://github.com/finsberg/fenics-plotly
 
 Features
@@ -36,5 +36,5 @@ This package is also inspired by `bvpy <https://gitlab.com/oali/bvpy>`__
    :target: https://circleci.com/gh/finsberg/fenics-plotly
 .. |image| image:: https://img.shields.io/pypi/v/fenics_plotly.svg
    :target: https://pypi.python.org/pypi/fenics_plotly
-.. |Documentation Status| image:: https://readthedocs.org/projects/fenics_plotly/badge/?version=latest
-   :target: https://fenics-plotly.readthedocs.io/en/latest/?badge=latest
+.. |github pages| image:: https://github.com/finsberg/fenics-plotly/actions/workflows/github-pages.yml/badge.svg
+   :target: https://github.com/finsberg/fenics-plotly/actions/workflows/github-pages.yml
