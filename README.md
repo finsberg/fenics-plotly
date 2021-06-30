@@ -7,15 +7,14 @@
 
 [![image](https://img.shields.io/pypi/v/fenics_plotly.svg)](https://pypi.python.org/pypi/fenics_plotly)
 
-[![Documentation Status](https://readthedocs.org/projects/fenics_plotly/badge/?version=latest)](https://fenics-plotly.readthedocs.io/en/latest/?badge=latest)
-
+[![github pages](https://github.com/finsberg/fenics-plotly/actions/workflows/github-pages.yml/badge.svg)](https://github.com/finsberg/fenics-plotly/actions/workflows/github-pages.yml)
 
 
 A package for plotting FEniCS objects using plotly
 
 
 * Free software: MIT license
-* Documentation: https://fenics-plotly.readthedocs.io.
+* Documentation: https://finsberg.github.io/fenics-plotly
 * Source code: https://github.com/finsberg/fenics-plotly
 
 ## Features
