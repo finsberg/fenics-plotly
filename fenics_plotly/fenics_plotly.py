@@ -12,9 +12,17 @@ try:
 except ValueError:
     _SHOW_PLOT = True
 
+try:
+    _RENDERER = os.getenv("FENICS_PLOTLY_RENDERER", "browser")
+except ValueError:
+    _RENDERER = "browser"
+
 
 def set_renderer(renderer):
     pio.renderers.default = renderer
+
+
+set_renderer(_RENDERER)
 
 
 def savefig(fig, filename, save_config=None):
