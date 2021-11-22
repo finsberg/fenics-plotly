@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>fenics_plotly.fenics_plotly &mdash; FEniCS-Plotly 0.1.6 documentation</title>
+  <title>fenics_plotly.fenics_plotly &mdash; FEniCS-Plotly 0.2.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.6
+                0.2.0
               </div>
             
           
@@ -87,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">FEniCS-Plotly</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
@@ -176,9 +176,17 @@
 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
     <span class="n">_SHOW_PLOT</span> <span class="o">=</span> <span class="kc">True</span>
 
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">_RENDERER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FENICS_PLOTLY_RENDERER&quot;</span><span class="p">,</span> <span class="s2">&quot;browser&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="n">_RENDERER</span> <span class="o">=</span> <span class="s2">&quot;browser&quot;</span>
+
 
 <div class="viewcode-block" id="set_renderer"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.set_renderer">[docs]</a><span class="k">def</span> <span class="nf">set_renderer</span><span class="p">(</span><span class="n">renderer</span><span class="p">):</span>
     <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">renderer</span></div>
+
+
+<span class="n">set_renderer</span><span class="p">(</span><span class="n">_RENDERER</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="savefig"><a class="viewcode-back" href="../../fenics_plotly.html#fenics_plotly.fenics_plotly.savefig">[docs]</a><span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">save_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
