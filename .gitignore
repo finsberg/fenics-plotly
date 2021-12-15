@@ -1,3 +1,10 @@
+docs/AUTHORS.md
+docs/CONTRIBUTING.md
+docs/INSTALL.md
+docs/README.md
+docs/fenics_plotly.rst
+docs/modules.rst
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
