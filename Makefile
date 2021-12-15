@@ -1,6 +1,8 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help
 .DEFAULT_GOAL := help
 
+export FENICS_PLOTLY_RENDERER=notebook
+
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 
@@ -59,14 +61,11 @@ test: ## run tests on every Python version with tox
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/fenics_plotly.rst
 	rm -f docs/modules.rst
-	pandoc README.md -o docs/readme.rst
-	pandoc HISTORY.md -o docs/history.rst
-	pandoc CONTRIBUTING.md -o docs/contributing.rst
-	pandoc AUTHORS.md -o docs/authors.rst
-	sphinx-apidoc -o docs/ fenics_plotly
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	# $(BROWSER) docs/_build/html/index.html
+	sphinx-apidoc -o docs fenics_plotly
+	for file in README.md CONTRIBUTING.md INSTALL.md AUTHORS.md; do \
+		cp $$file docs/. ;\
+	done
+	jupyter-book build docs
 	# python -m http.server --directory docs/_build/html
 
 servedocs: docs ## compile the docs watching for changes

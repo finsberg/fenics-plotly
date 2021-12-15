@@ -19,7 +19,7 @@ A package for plotting FEniCS objects using plotly
 
 ## Features
 
-Plot almost all types of FEnICS objects using one interface
+Plot almost all types of FEniCS objects using one interface
 
 
 

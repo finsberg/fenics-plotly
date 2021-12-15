@@ -1,0 +1,14 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: README
+chapters:
+  - file: INSTALL
+  - file: DEMO
+    sections:
+      - file: unit_square.ipynb
+      - file: unit_cube.ipynb
+  - file: CONTRIBUTING.md
+  - file: AUTHORS.md
+  - file: fenics_plotly

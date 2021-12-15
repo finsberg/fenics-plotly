@@ -57,13 +57,13 @@ Ready to contribute? Here's how to set up fenics_plotly for local development.
 
 2.  Clone your fork locally:
 
-    ``` {.shell}
+    ```
     $ git clone git@github.com:your_name_here/fenics_plotly.git
     ```
 
-3.  Install your local copy into a virtual environment. 
+3.  Install your local copy into a virtual environment.
 
-    ``` {.shell}
+    ```
     $ cd fenics_plotly/
     $ python -m venv venv
     $ source venv/bin/activate
@@ -72,7 +72,7 @@ Ready to contribute? Here's how to set up fenics_plotly for local development.
 
 4.  Create a branch for local development:
 
-    ``` {.shell}
+    ```
     $ git checkout -b name-of-your-bugfix-or-feature
     ```
 
@@ -82,7 +82,7 @@ Ready to contribute? Here's how to set up fenics_plotly for local development.
     flake8, static type checking and the tests, including testing other Python versions with
     tox:
 
-    ``` {.shell}
+    ```
     $ make lint
     $ make type
     $ make test
@@ -92,7 +92,7 @@ Ready to contribute? Here's how to set up fenics_plotly for local development.
 
 6.  Commit your changes and push your branch to GitHub:
 
-    ``` {.shell}
+    ```
     $ git add .
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
@@ -115,7 +115,7 @@ Before you submit a pull request, check that it meets these guidelines:
 
 To run a subset of tests starting with `test_something` do:
 
-``` {.shell}
+```
 $ python -m pytest -k test_something
 ```
 
@@ -126,7 +126,7 @@ $ python -m pytest -k test_something
 A reminder for the maintainers on how to deploy. Make sure all your
 changes are committed (including an entry in HISTORY.md). Then run:
 
-``` {.shell}
+```
 $ bump2version patch # possible: major / minor / patch
 $ git push
 $ git push --tags
