@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/fenicsproject/stable:latest
+      image: finsberg/fenics-extra
     steps:
       - uses: actions/checkout@v2
 
@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install -y pandoc
-          python3 -m pip install ".[docs]" --use-deprecated=legacy-resolver
+          python3 -m pip install ".[docs]"
 
       - name: Build docs
         run: |
