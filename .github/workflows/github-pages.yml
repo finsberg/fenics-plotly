@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install ".[docs]"
+          python3 -m pip install ".[docs]"
 
       - name: Build docs
         run: |
