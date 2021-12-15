@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install -y pandoc
-          python3 -m pip install ".[docs]"
+          python3 -m pip install ".[docs]" --use-deprecated=legacy-resolver
 
       - name: Build docs
         run: |
