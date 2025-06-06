@@ -1,38 +1,38 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.6.0
     hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
-  - repo: local
-    hooks:
-      - id: isort
-        name: isort
-        stages: [commit]
-        language: system
-        entry: python -m isort
-        types: [python]
+      - id: check-yaml
+        exclude: conda.recipe/meta.yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: requirements-txt-fixer
 
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
       - id: black
-        name: black
-        stages: [commit]
-        language: system
-        entry: python -m black
-        types: [python]
 
-      - id: flake8
-        name: flake8
-        stages: [commit]
-        language: system
-        entry: python -m flake8
-        types: [python]
-        exclude: setup.py
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.1.0
+    hooks:
+      - id: add-trailing-comma
 
+  - repo: https://github.com/asottile/setup-cfg-fmt
+    rev: v2.5.0
+    hooks:
+      - id: setup-cfg-fmt
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 'v0.6.3'
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
       - id: mypy
-        name: mypy
-        stages: [commit]
-        language: system
-        entry: python -m mypy
-        types: [python]
-        pass_filenames: false
