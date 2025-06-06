@@ -33,7 +33,12 @@ def test_plot_mesh(dim, wireframe):
 def test_plot_two_mesh():
     mesh1 = df.UnitCubeMesh(2, 2, 2)
     mesh2 = df.BoxMesh(
-        df.MPI.comm_world, df.Point(0.0, 0.0, 0.0), df.Point(1.2, 0.5, 1.3), 3, 3, 3
+        df.MPI.comm_world,
+        df.Point(0.0, 0.0, 0.0),
+        df.Point(1.2, 0.5, 1.3),
+        3,
+        3,
+        3,
     )
     fig = plot(mesh1, show=False)
     fig.add_plot(plot(mesh2, color="red", show=False))
@@ -82,7 +87,7 @@ def test_plot_vector_cg_function(dim, wireframe, norm, normalize, degree, compon
             return
     else:
         u.interpolate(
-            df.Expression(("1 + x[0]*x[0]", "x[1]*x[1]", "x[2]*x[2]"), degree=1)
+            df.Expression(("1 + x[0]*x[0]", "x[1]*x[1]", "x[2]*x[2]"), degree=1),
         )
 
     plot(

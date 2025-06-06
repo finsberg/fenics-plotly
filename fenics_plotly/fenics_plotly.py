@@ -49,7 +49,7 @@ def savefig(fig, filename, save_config=None):
             "filename": filename.stem,
             "width": 1500,
             "height": 1200,
-        }
+        },
     }
     if save_config is not None:
         config.update(save_config)
@@ -79,7 +79,8 @@ def _get_vertex_values(function):
             for i in range(size_n):
                 for j in range(size_n):
                     res[:, i, j] = function.sub(
-                        count + j, deepcopy=True
+                        count + j,
+                        deepcopy=True,
                     ).compute_vertex_values()
                 count += size_n
         return res
@@ -156,7 +157,11 @@ def _wireframe_plot_mesh(mesh, **kwargs):
 
 
 def _surface_plot_function(
-    function, colorscale, showscale=True, intensitymode="vertex", **kwargs
+    function,
+    colorscale,
+    showscale=True,
+    intensitymode="vertex",
+    **kwargs,
 ):
     mesh = function.function_space().mesh()
     if intensitymode == "vertex":
@@ -366,7 +371,8 @@ def _handle_function(
                     if component not in [comp, comp.upper()]:
                         continue
                     surface = _surface_plot_function(
-                        obj.sub(i, deepcopy=True), **kwargs
+                        obj.sub(i, deepcopy=True),
+                        **kwargs,
                     )
                     data.append(surface)
 
